@@ -12,6 +12,7 @@
 
     <body>
         <main id="content"></main>
+        <aside id="othercontent"></aside>
 
         <script type="x-template/sideburns" data-name="list">
         <ul>
@@ -25,7 +26,14 @@
         mu.ready(function(){
             mu("#content").render("list",
                                   {
-                                    items: ["hello", "this", "is", "list"]
+                                    items: ["hello", "this", "is", "unordered", "list"]
+                                  },
+                                  {
+                                    useHtml: true
+                                  });
+            mu("#othercontent").render("<ol>[[* items ]]<li>[[item]]</li>[[/* items ]]</ol>",
+                                  {
+                                    items: ["hello", "this", "is", "ordered", "list"]
                                   },
                                   {
                                     useHtml: true
