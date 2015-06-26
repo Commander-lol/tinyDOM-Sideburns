@@ -1,0 +1,11 @@
+{
+	"outputs": [
+		{
+			"inputs": ["src/sideburns.cut.js", "src/tinyDOM-Sideburns.js"],
+			"output": "tinyDOM-Sideburns.min.js",
+			"generateMap": true,
+			"mangle": true,
+			"isolate": true
+		}
+	]
+}
