@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>SB test</title>
+        <script src="td.js"></script>
+        <script src="sb.js"></script>
+        <script src="../tinyDOM-Sideburns.js"></script>
+    </head>
+
+    <body>
+        <main id="content"></main>
+
+        <script type="x-template/sideburns" data-name="list">
+        <ul>
+        [[* items ]]
+            <li>[[item]]</li>
+        [[/* items ]]
+        </ul>
+        </script>
+
+        <script type="application/javascript">
+        mu.ready(function(){
+            mu("#content").render("list",
+                                  {
+                                    items: ["hello", "this", "is", "list"]
+                                  },
+                                  {
+                                    useHtml: true
+                                  });
+        });
+        </script>
+    </body>
+</html>
