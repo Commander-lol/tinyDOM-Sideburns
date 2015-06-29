@@ -2,16 +2,19 @@ if (!window.mu) {
     throw new Error("tinyDOM-Sideburns requires tinyDOM to be in use on the page");
 }
 
-mu.templates = {};
-
 mu.render = function (path, data, options) {
-    if (mu.templates.hasOwnProperty(path)) {
-        return mu.templates[path](data, options);
+    if (render.includes.hasOwnProperty(path)) {
+        return render.includes[path](data, options);
     } else {
         return render(path, data, options);
     }
 };
 
+mu.include = function (path, template) {
+    render.addInclude(path, template);
+};
+
+mu.partial = render.partial;
 
 mu.fn.render = function (path, data, options) {
     var rendered = mu.render(path, data, options),
@@ -32,6 +35,6 @@ mu.fn.render = function (path, data, options) {
 mu.ready(function () {
     mu("[type='x-template/sideburns']").each(function (i, e) {
         var name = e.getAttribute("data-name");
-        mu.templates[name] = render.partial(e.textContent);
+        render.addInclude(name, e.textContent);
     });
 });
