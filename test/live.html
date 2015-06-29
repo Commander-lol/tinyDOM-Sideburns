@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Sideburns Live Renderer</title>
+
+        <style>
+            * {
+                font-family: sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            body, html {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+
+            .column {
+                display: inline-block;
+                box-sizing: border-box;
+                width: 33%;
+                height: calc(100% - 4em);
+                position: relative;
+                vertical-align: top;
+            }
+
+            .pad {
+                padding: 1em;
+            }
+            .pad p {
+                padding: 1em;
+            }
+            .column .sub {
+                height: calc(50% - 0.25em);
+                width: 100%;
+                padding: 0;
+                margin-bottom: 0.25em;
+            }
+
+            .row {
+                width: 100%;
+                padding: 1em;
+                box-sizing: border-box;
+            }
+
+            #header {
+                text-align: center;
+                height: 4em;
+            }
+
+            .txt-display {
+                width: 95%;
+                max-width: 95%;
+                min-height: 50%;
+                position: relative;
+                margin: 1em auto;
+                font-family: monospace;
+            }
+
+            #output {
+                background-color: white;
+                font-family: sans-serif;
+            }
+
+        </style>
+    </head>
+
+    <body>
+    <div class="row" id="header">
+        <h1>Sideburns Live Renderer</h1>
+    </div>
+    <div id="t" class="column pad" style="background-color:blue;">
+        <h2>Input Template</h2>
+        <textarea id="inp-template" class="txt-display"></textarea>
+        <p class="error"></p>
+    </div>
+    <div class="column">
+        <div id="d" class="sub pad" style="background-color:red;">
+        <h2>Input Data</h2>
+        <textarea id="inp-data" class="txt-display">{
+
+}</textarea>
+            <p class="error"></p>
+            </div>
+        <div id="o" class="sub pad" style="background-color:red;">
+        <h2>Input Options</h2>
+        <textarea id="inp-options" class="txt-display">{
+
+}</textarea>
+            <p class="error"></p>
+            </div>
+    </div>
+    <div id="out" class="column pad" style="background-color:green;">
+        <h2>Output</h2>
+        <pre id="output" class="txt-display"></pre>
+    </div>
+
+
+        <script src="td.js"></script>
+        <script src="../dist/tinyDOM-Sideburns.min.js"></script>
+        <script>
+        var afterTimeout = function() {
+            validateAndRender(mu("#" + this.id));
+            times[this.id] = null;
+        }, times = {
+            "inp-template": null,
+            "inp-data": null,
+            "inp-options": null
+        },
+            d = mu.byID("inp-data"),
+            t = mu.byID("inp-template"),
+            o = mu.byID("inp-options"),
+
+            validateAndRender = function(e){
+                var valid = true, data, options;
+
+                try{
+                    data = JSON.parse(d[0].value.trim())
+                    d[0].value = JSON.stringify(data, null, 2);
+                    mu("#d *:last-child")[0].innerHTML = "VALID JSON";
+                } catch (e) {
+                    mu("#d *:last-child")[0].innerHTML = "INVALID JSON<br>" + e;
+                    valid = false;
+                }
+
+                try{
+                    options = JSON.parse(options = o[0].value.trim());
+                    o[0].value = JSON.stringify(options, null, 2);
+                    mu("#o *:last-child")[0].innerHTML = "VALID JSON";
+                } catch (e) {
+                    mu("#o *:last-child")[0].innerHTML = "INVALID JSON<br>" + e;
+                    valid = false;
+                }
+
+                if(valid) {
+                    mu.byID("output")[0].style.color = "black";
+                    mu.byID("output")[0].style.whiteSpace = "pre-wrap";
+                    try{
+                        mu.byID("output").render(t[0].value, data, options);
+                    } catch (e) {
+                        mu.byID("output")[0].innerHTML = e.message;
+                        mu.byID("output")[0].style.color = "red";
+                    }
+                }
+
+        };
+        mu.ready(function(){
+            mu(".pad textarea").on("input", function(e){
+                if (times[this.id] !== null) {
+                    window.clearTimeout(times[this.id]);
+                }
+                times[this.id] = window.setTimeout(afterTimeout.bind(this), 250);
+            });
+        });
+        </script>
+    </body>
+
+</html>
